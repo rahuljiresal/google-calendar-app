@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, shell } = require('electron');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
+const open = require('open')
 
 // The main window
 let win = null;
@@ -145,15 +146,20 @@ if (!gotTheLock) {
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
-    wc.on('new-window', (ev, url, name) => {
-      ev.preventDefault();
-      if (url == 'about:blank') {
-        // Create a hidden window (for Hangouts)
-        ev.newGuest = new BrowserWindow({ show: false });
-      } else {
-        // Open URLs in the default browser
-        shell.openExternal(url);
-      }
+    // wc.on('new-window', (ev, url, name) => {
+    //   ev.preventDefault();
+    //   if (url == 'about:blank') {
+    //     // Create a hidden window (for Hangouts)
+    //     ev.newGuest = new BrowserWindow({ show: false });
+    //   } else {
+    //     // Open URLs in the default browser
+    //     shell.openExternal(url);
+    //   }
+    // });
+
+    wc.on('new-window', function(event, url){
+      event.preventDefault();
+      open(url);
     });
 
     win.loadURL('https://www.google.com/calendar');
